@@ -11,20 +11,19 @@ from sugar3.graphics.toolbutton import ToolButton
 from sugar3.activity.widgets import StopButton
 
 
-sys.path.append('..')  # Import sugargame package from top directory.
 import sugargame.canvas
 
-import TestGame
+import BalancingAct
 
 
-class TestActivity(sugar3.activity.activity.Activity):
+class BalancingActActivity(sugar3.activity.activity.Activity):
     def __init__(self, handle):
-        super(TestActivity, self).__init__(handle)
+        super(BalancingActActivity, self).__init__(handle)
 
         self.paused = False
 
         # Create the game instance.
-        self.game = TestGame.TestGame()
+        self.game = BalancingAct.BalancingAct()
 
         # Build the activity toolbar.
         self.build_toolbar()
@@ -35,7 +34,6 @@ class TestActivity(sugar3.activity.activity.Activity):
         # Note that set_canvas implicitly calls read_file when
         # resuming from the Journal.
         self.set_canvas(self._pygamecanvas)
-        self._pygamecanvas.grab_focus()
 
         # Start the game running (self.game.run is called when the
         # activity constructor returns).

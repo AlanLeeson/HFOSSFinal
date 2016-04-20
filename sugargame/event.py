@@ -40,7 +40,7 @@ class Translator(object):
     }
     
     def __init__(self, mainwindow, inner_evb):
-        """Initialise the Translator with the windows to which to listen"""
+        '''Initialise the Translator with the windows to which to listen'''
         self._mainwindow = mainwindow
         self._inner_evb = inner_evb
 

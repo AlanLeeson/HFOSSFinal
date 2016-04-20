@@ -1,8 +1,6 @@
 [Activity]
-name = example
-bundle_id = example.laptop.org
-icon = exampleicon
-exec = sugar-activity activity.Example
-show_launcher = yes
+name = Balancing Act
+bundle_id = edu.rit.BalancingAct
+exec = sugar-activity BalancingActActivity.BalancingActActivity
+icon = activity-generic
 activity_version = 1
-license = GPLv2+

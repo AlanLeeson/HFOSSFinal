@@ -8,9 +8,9 @@ CANVAS = None
 
 class PygameCanvas(Gtk.EventBox):
     
-    """
+    '''
     mainwindow is the activity intself.
-    """
+    '''
     def __init__(self, mainwindow, pointer_hint = True):
         GObject.GObject.__init__(self)
 
