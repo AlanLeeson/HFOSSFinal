@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import pygame
+import random
 from gi.repository import Gtk
 
 
@@ -14,6 +15,9 @@ class BalancingAct:
         self.vx = 10
         self.vy = 0
 
+        self.solution = 0
+	self.operator = "plus"
+
         self.paused = False
         self.direction = 1
 
@@ -27,6 +31,10 @@ class BalancingAct:
     # Called to load the state of the game from the Journal.
     def read_file(self, file_path):
         pass
+    
+    #Create the math equation
+    def create_equation(self):
+	self.solution = random.randint(9,30)
 
     # The main game loop.
     def run(self):
@@ -72,6 +80,11 @@ class BalancingAct:
             # Draw the ball
             pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
 
+	    #Draw text
+	    myFont = pygame.font.SysFont("monospace",60)
+	    label = myFont.render('Solution =  ' + str(self.solution),1,(25,25,255))
+	    screen.blit(label,(100,100))
+
             # Flip Display
             pygame.display.flip()
 
@@ -85,6 +98,7 @@ def main():
     pygame.init()
     pygame.display.set_mode((0, 0), pygame.RESIZABLE)
     game = BalancingAct()
+    game.create_equation()
     game.run()
 
 if __name__ == '__main__':
