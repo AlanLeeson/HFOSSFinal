@@ -16,12 +16,9 @@ class BalancingAct:
         self.vy = 0
 
         self.solution = 0
-	self.userSolution = 0
-	self.operator = "+"
+	self.operator = "plus"
 	self.leftHandMultiplier = 0
 	self.rightHandMultiplier = 0
-	self.leftHandNumber = 0
-	self.rightHandNumber = 0
 
         self.paused = False
         self.direction = 1
@@ -37,32 +34,10 @@ class BalancingAct:
     def read_file(self, file_path):
         pass
     
-    # Create the math equation
+    #Create the math equation
     def create_equation(self):
-	self.userSolution = 0
-	self.leftHandNumber = 0
-	self.rightHandNumber = 0
-	self.solution = random.randint(10,30)
-	self.leftHandMultiplier = int(str(self.solution)[0]) * 2
-	secondDigit = int(str(self.solution)[1])
-
-	if secondDigit  % 2 == 0 and secondDigit > 2:
-	    self.rightHandMultiplier = secondDigit / 2
-	else: 
-	    self.rightHandMultiplier = secondDigit
-
-    # calculate the user input
-    def calculate_equation(self):
-	leftProduct = self.leftHandMultiplier * self.leftHandNumber
-	rightProduct = self.rightHandMultiplier * self.rightHandNumber
+	self.solution = random.randint(9,30)
 	
-	if self.operator == "+":
-	    self.userSolution = leftProduct + rightProduct
-	elif self.operator == "-":
-	    self.userSolution = leftProduct - rightProduct
-
-	if self.userSolution == self.solution:
-	    self.create_equation()
 
     # The main game loop.
     def run(self):
@@ -86,13 +61,6 @@ class BalancingAct:
                         self.direction = -1
                     elif event.key == pygame.K_RIGHT:
                         self.direction = 1
-		    #Controls to add numbers to multipliers
-		    elif event.key == pygame.K_UP:
-			self.leftHandNumber += 1;
-			self.calculate_equation()
-		    elif event.key == pygame.K_DOWN:
-			self.rightHandNumber += 1;
-			self.calculate_equation()
 
             # Move the ball
             if not self.paused:
@@ -117,17 +85,8 @@ class BalancingAct:
 
 	    #Draw text
 	    myFont = pygame.font.SysFont("monospace",60)
-	    leftSideLabel = myFont.render(str(self.leftHandNumber) + 
-		" x " + str(self.leftHandMultiplier) + " " +
-		str(self.operator) + " " +
-		str(self.rightHandNumber) + " x " + 
-		str(self.rightHandMultiplier) + " = " +
-		str(self.userSolution),1,(25,25,255))
-
-	    rightSideLabel = myFont.render("Goal = " + str(self.solution),1,(255,25,25))
-
-	    screen.blit(leftSideLabel,(100,100))
-	    screen.blit(rightSideLabel,(100,150))
+	    label = myFont.render('Solution =  ' + str(self.solution),1,(25,25,255))
+	    screen.blit(label,(100,100))
 
             # Flip Display
             pygame.display.flip()
