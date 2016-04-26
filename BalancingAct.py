@@ -39,9 +39,7 @@ class BalancingAct:
     
     # Create the math equation
     def create_equation(self):
-	self.userSolution = 0
-	self.leftHandNumber = 0
-	self.rightHandNumber = 0
+	self.reload_data()
 	self.solution = random.randint(10,30)
 	self.leftHandMultiplier = int(str(self.solution)[0]) * 2
 	secondDigit = int(str(self.solution)[1])
@@ -50,6 +48,12 @@ class BalancingAct:
 	    self.rightHandMultiplier = secondDigit / 2
 	else: 
 	    self.rightHandMultiplier = secondDigit
+
+    # zero equations and data
+    def reload_data(self):
+	self.leftHandNumber = 0
+	self.rightHandNumber = 0
+	self.userSolution = 0
 
     # calculate the user input
     def calculate_equation(self):
@@ -63,6 +67,8 @@ class BalancingAct:
 
 	if self.userSolution == self.solution:
 	    self.create_equation()
+	elif self.userSolution > self.solution:
+	    self.reload_data()
 
     # The main game loop.
     def run(self):
