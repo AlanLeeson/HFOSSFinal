@@ -79,8 +79,6 @@ class BalancingAct:
 
     	if self.userSolution == self.solution:
     	    self.create_equation()
-    	elif self.userSolution > self.solution:
-    	    self.reload_data()
 
     def text_objects(self, text, font):
         textSurface = font.render(text, True, self.black)
@@ -106,22 +104,26 @@ class BalancingAct:
 
     def increaseLeft(self):
         self.fired = pygame.time.get_ticks()
-        self.leftHandNumber += 1;
+        if self.leftHandNumber < 10:
+            self.leftHandNumber += 1
         self.calculate_equation()
 
     def increaseRight(self):
         self.fired = pygame.time.get_ticks()
-        self.rightHandNumber += 1;
+        if self.rightHandNumber < 10:
+            self.rightHandNumber += 1
         self.calculate_equation()
 
     def decreaseLeft(self):
         self.fired = pygame.time.get_ticks()
-        self.leftHandNumber -= 1;
+        if self.leftHandNumber > 0:
+            self.leftHandNumber -= 1
         self.calculate_equation()
 
     def decreaseRight(self):
         self.fired = pygame.time.get_ticks()
-        self.rightHandNumber -= 1;
+        if self.rightHandNumber > 0:
+            self.rightHandNumber -= 1
         self.calculate_equation()
 
     # The main game loop.
