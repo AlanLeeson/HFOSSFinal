@@ -9,12 +9,6 @@ class BalancingAct:
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
 
-        self.x = -100
-        self.y = 100
-
-        self.vx = 10
-        self.vy = 0
-
         self.solution = 0
     	self.userSolution = 0
     	self.operator = "+"
@@ -37,7 +31,7 @@ class BalancingAct:
         self.red = (255,100,100)
         self.bright_red = (255,0,0)
 
-
+    # Called to pause the game
     def set_paused(self, paused):
         self.paused = paused
 
@@ -80,10 +74,12 @@ class BalancingAct:
     	if self.userSolution == self.solution:
     	    self.create_equation()
 
+    #get bound of text before rendering to page
     def text_objects(self, text, font):
         textSurface = font.render(text, True, self.black)
         return textSurface, textSurface.get_rect()
 
+    #place button on screen (self,message,mouseover color,mouseoff color,x,y,width,height,function to fire)
     def button(self,msg,over,off,x,y,w,h,action=None):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -102,24 +98,28 @@ class BalancingAct:
         textRect.center = ( (x+(w/2)), (y+(h/2)) )
         self.screen.blit(textSurf, textRect)
 
+    #increase left number up to 10
     def increaseLeft(self):
         self.fired = pygame.time.get_ticks()
         if self.leftHandNumber < 10:
             self.leftHandNumber += 1
         self.calculate_equation()
 
+    #increase right number up to 10
     def increaseRight(self):
         self.fired = pygame.time.get_ticks()
         if self.rightHandNumber < 10:
             self.rightHandNumber += 1
         self.calculate_equation()
 
+    #decrease left number down to 0
     def decreaseLeft(self):
         self.fired = pygame.time.get_ticks()
         if self.leftHandNumber > 0:
             self.leftHandNumber -= 1
         self.calculate_equation()
 
+    #decrese right number down to 0
     def decreaseRight(self):
         self.fired = pygame.time.get_ticks()
         if self.rightHandNumber > 0:
