@@ -4,7 +4,6 @@ import random
 import math
 from gi.repository import Gtk
 
-
 class BalancingAct:
     def __init__(self):
         # Set up a clock for managing the frame rate.
@@ -23,8 +22,8 @@ class BalancingAct:
 
         #numbers to calculate left side of scale
         self.weight = 1.0
-        self.scaleWidth = 150
-        self.scaleHeight = 20
+        self.scaleWidth = 300
+        self.scaleHeight = 30
         self.scaleBasePositionX = self.screenWidth/4
         self.scaleBasePositionY = self.screenHeight * 0.65
         self.scaleCurrentPosition = 0.0
@@ -125,36 +124,36 @@ class BalancingAct:
         leftCalculatedY = self.scaleBasePositionY - self.scaleCurrentPosition #basePosition plus or minus 50 pixels
 
         leftPointOne = (leftCalculatedX, leftCalculatedY) #left point of left triangle
-        leftPointTwo = (leftCalculatedX + (self.scaleWidth / 2.0), leftCalculatedY - 75) #top point of left triangle
+        leftPointTwo = (leftCalculatedX + (self.scaleWidth / 2.0), leftCalculatedY - 120) #top point of left triangle
         leftPointThree = (leftCalculatedX + self.scaleWidth, leftCalculatedY) #right point of right triangle
 
-        pygame.draw.line(self.screen, self.black, leftPointOne, leftPointTwo, 3)
-        pygame.draw.line(self.screen, self.black, leftPointTwo, leftPointThree, 3)
+        pygame.draw.line(self.screen, self.black, leftPointOne, leftPointTwo, 5)
+        pygame.draw.line(self.screen, self.black, leftPointTwo, leftPointThree, 5)
         pygame.draw.rect(self.screen, self.blue, (leftCalculatedX, leftCalculatedY, self.scaleWidth, self.scaleHeight)) #scale
-        self.textBox(self.problemText, leftCalculatedX, leftCalculatedY, self.scaleWidth, -12) #right side label
+        self.textBox(self.problemText, leftCalculatedX, leftCalculatedY, self.scaleWidth, -15) #right side label
         
         #right scale
         rightCalculatedX = self.scaleBasePositionX + 400
         rightCalculatedY = self.scaleBasePositionY - 100.0 + self.scaleCurrentPosition #basePosition plus this opposite adjustment of the left side
         
         rightPointOne = (rightCalculatedX, rightCalculatedY) #left point of right triangle
-        rightPointTwo = (rightCalculatedX + (self.scaleWidth / 2.0), rightCalculatedY - 75) #top point of right triangle
+        rightPointTwo = (rightCalculatedX + (self.scaleWidth / 2.0), rightCalculatedY - 120) #top point of right triangle
         rightPointThree = (rightCalculatedX + self.scaleWidth, rightCalculatedY) #right point of right triangle
 
-        pygame.draw.line(self.screen, self.black, rightPointOne, rightPointTwo, 3) #
-        pygame.draw.line(self.screen, self.black, rightPointTwo, rightPointThree, 3)
+        pygame.draw.line(self.screen, self.black, rightPointOne, rightPointTwo, 5) #
+        pygame.draw.line(self.screen, self.black, rightPointTwo, rightPointThree, 5)
         pygame.draw.rect(self.screen, self.blue, (rightCalculatedX, rightCalculatedY, self.scaleWidth, self.scaleHeight))
-        self.textBox(self.solutionText, rightCalculatedX, rightCalculatedY, self.scaleWidth, -12) #right side label
+        self.textBox(self.solutionText, rightCalculatedX, rightCalculatedY, self.scaleWidth, -15) #right side label
 
         #center stand
         centerPointOne = ((leftPointTwo[0] + rightPointTwo[0]) / 2),((leftPointTwo[1] + rightPointTwo[1]) / 2) #top point of base
-        centerPointTwo = (centerPointOne[0], centerPointOne[1] + 300) #center point of base
+        centerPointTwo = (centerPointOne[0], centerPointOne[1] + 400) #center point of base
         centerPointThree = (centerPointTwo[0] - 100, centerPointTwo[1]) #left point of base
         centerPointFour = (centerPointTwo[0] + 100, centerPointTwo[1]) #right point of base
 
-        pygame.draw.line(self.screen, self.black, leftPointTwo, rightPointTwo, 3) #scale beam
-        pygame.draw.line(self.screen, self.black, centerPointOne, centerPointTwo, 3) #scale trunk
-        pygame.draw.line(self.screen, self.black, centerPointThree, centerPointFour, 3) #scale feet
+        pygame.draw.line(self.screen, self.black, leftPointTwo, rightPointTwo, 5) #scale beam
+        pygame.draw.line(self.screen, self.black, centerPointOne, centerPointTwo, 5) #scale trunk
+        pygame.draw.line(self.screen, self.black, centerPointThree, centerPointFour, 5) #scale feet
 
     #determine if the scale is set to the correct position or just passing over it
     def checkCorrect(self, correctPos):
@@ -183,7 +182,7 @@ class BalancingAct:
         self.textBox(msg,x,y,w,h)
 
     def textBox(self,msg,x,y,w,h):
-        smallText = pygame.font.Font("freesansbold.ttf",20)
+        smallText = pygame.font.Font("freesansbold.ttf",40)
         textSurf, textRect = self.text_objects(msg, smallText)
         textRect.center = ( (x+(w/2)), (y+(h/2)) )
         self.screen.blit(textSurf, textRect)
@@ -229,7 +228,7 @@ class BalancingAct:
 
         while self.running:
             # Pump GTK messages.
-            while Gtk.events_pending():
+			while Gtk.events_pending():
                 Gtk.main_iteration()
 
             # Pump PyGame messages.
@@ -249,12 +248,12 @@ class BalancingAct:
             self.screen.fill(self.white)
 
             # Draw increase buttons
-            self.button('up',self.bright_green,self.green,200,400,100,50,self.increaseLeft)
-            self.button('up',self.bright_green,self.green,500,400,100,50,self.increaseRight)
+            self.button('+',self.bright_green,self.green,50,400,100,50,self.increaseLeft)
+            self.button('+',self.bright_green,self.green,200,400,100,50,self.increaseRight)
 
             # Draw decrease buttons
-            self.button('down',self.bright_red,self.red,200,500,100,50,self.decreaseLeft)
-            self.button('down',self.bright_red,self.red,500,500,100,50,self.decreaseRight)
+            self.button('-',self.bright_red,self.red,50,500,100,50,self.decreaseLeft)
+            self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
 
             #update text
             self.problemText = str(self.leftHandNumber) + " x " + str(self.leftHandMultiplier) + " " + str(self.operator) + " " + str(self.rightHandNumber) + " x " +  str(self.rightHandMultiplier)
