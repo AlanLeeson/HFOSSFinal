@@ -10,6 +10,9 @@ class BalancingAct:
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
 
+        self.screenWidth = pygame.display.Info().current_w
+	self.screenHeight = pygame.display.Info().current_h
+	
         self.solution = 0
     	self.userSolution = 0
     	self.operator = "+"
@@ -22,8 +25,8 @@ class BalancingAct:
         self.weight = 1.0
         self.scaleWidth = 150
         self.scaleHeight = 20
-        self.scaleBasePositionX = 200.0
-        self.scaleBasePositionY = 300.0
+        self.scaleBasePositionX = self.screenWidth/4
+        self.scaleBasePositionY = self.screenHeight * 0.65
         self.scaleCurrentPosition = 0.0
         self.scaleCorrectPosition = 0.0
         self.scaleSpeed = 1.0
