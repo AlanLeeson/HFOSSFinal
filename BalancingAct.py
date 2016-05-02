@@ -224,7 +224,7 @@ class BalancingAct:
     #end the current problem and enable next problem button
     def showCorrect(self):
         self.buttonsEnabled = False;
-        self.button('Next Problem',self.bright_green,self.green,800,400,500,200,self.reset_problem)
+        self.button('Next Problem',self.bright_green,self.green,800,200,400,195,self.reset_problem)
 
     # Start the game 
     def setupPlay(self):
@@ -233,7 +233,7 @@ class BalancingAct:
 
     # Return to the menu
     def returnToMenu(self):
-        self.currentPlayState = self.PlayStates.Menu
+        self.currentPlayState = self.playStates.Menu
 
     # The screen for the menu
     def drawMenuState(self):
@@ -250,7 +250,7 @@ class BalancingAct:
         self.button('-',self.bright_red,self.red,50,500,100,50,self.decreaseLeft)
         self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
 
-        self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.decreaseRight)
+        self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
 
         #update text
         self.problemText = str(self.leftHandNumber) + " x " + str(self.leftHandMultiplier) + " " + str(self.operator) + " " + str(self.rightHandNumber) + " x " +  str(self.rightHandMultiplier)
