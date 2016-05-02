@@ -2,6 +2,7 @@
 import pygame
 import random
 import math
+from gi.repository import Gtk
 
 def enum(**enums):
     return type('Enum', (), enums)
@@ -275,7 +276,8 @@ class BalancingAct:
 
         while self.running:
             # Pump GTK messages.
-			
+            while Gtk.events_pending():
+                Gtk.main_iteration()
 
             # Pump PyGame messages.
             for event in pygame.event.get():
