@@ -2,9 +2,12 @@
 import pygame
 import random
 import math
-from gi.repository import Gtk
+
+def enum(**enums):
+    return type('Enum', (), enums)
 
 class BalancingAct:
+
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
@@ -36,6 +39,8 @@ class BalancingAct:
         self.fired = 0
         self.cooldown = 300
 
+        self.playStates = enum(Menu=0,Play=1,Paused=2)
+        self.currentPlayState = self.playStates.Play
         self.paused = False
         self.direction = 1
 
@@ -220,6 +225,48 @@ class BalancingAct:
         self.buttonsEnabled = False;
         self.button('Next Problem',self.bright_green,self.green,800,400,500,200,self.reset_problem)
 
+    # Start the game 
+    def setupPlay(self):
+        self.currentPlayState = self.playStates.Play
+        self.create_equation()
+
+    # Return to the menu
+    def returnToMenu(self):
+        self.currentPlayState = self.PlayStates.Menu
+
+    # The screen for the menu
+    def drawMenuState(self):
+        self.textBox("Balancing Act", self.screenWidth/2 - 30, 200, 60, -15)
+        self.button('Start',self.bright_blue,self.blue,self.screenWidth/2-60,400,120,60,self.setupPlay)
+
+    # The screen during play
+    def drawPlayState(self):
+        # Draw increase buttons
+        self.button('+',self.bright_green,self.green,50,400,100,50,self.increaseLeft)
+        self.button('+',self.bright_green,self.green,200,400,100,50,self.increaseRight)
+
+        # Draw decrease buttons
+        self.button('-',self.bright_red,self.red,50,500,100,50,self.decreaseLeft)
+        self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
+
+        self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.decreaseRight)
+
+        #update text
+        self.problemText = str(self.leftHandNumber) + " x " + str(self.leftHandMultiplier) + " " + str(self.operator) + " " + str(self.rightHandNumber) + " x " +  str(self.rightHandMultiplier)
+        self.solutionText = str(self.solution)
+        self.userSolutionText = str(self.userSolution)
+
+        #move the scale
+        self.tipScales()
+
+        #draw the scale
+        self.drawScales()
+
+        #show correct animation
+        if self.correct:
+            self.showCorrect()
+
+
     # The main game loop.
     def run(self):
         self.running = True
@@ -228,8 +275,7 @@ class BalancingAct:
 
         while self.running:
             # Pump GTK messages.
-			while Gtk.events_pending():
-                Gtk.main_iteration()
+			
 
             # Pump PyGame messages.
             for event in pygame.event.get():
@@ -238,38 +284,18 @@ class BalancingAct:
                 elif event.type == pygame.VIDEORESIZE:
                     pygame.display.set_mode(event.size, pygame.RESIZABLE)
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.direction = -1
-                    elif event.key == pygame.K_RIGHT:
-                        self.direction = 1
+                    if event.key == pygame.K_LEFT: 
+                        self.currentPlayState = self.playStates.Paused
 
 
             # Clear Display
             self.screen.fill(self.white)
 
-            # Draw increase buttons
-            self.button('+',self.bright_green,self.green,50,400,100,50,self.increaseLeft)
-            self.button('+',self.bright_green,self.green,200,400,100,50,self.increaseRight)
-
-            # Draw decrease buttons
-            self.button('-',self.bright_red,self.red,50,500,100,50,self.decreaseLeft)
-            self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
-
-            #update text
-            self.problemText = str(self.leftHandNumber) + " x " + str(self.leftHandMultiplier) + " " + str(self.operator) + " " + str(self.rightHandNumber) + " x " +  str(self.rightHandMultiplier)
-            self.solutionText = str(self.solution)
-            self.userSolutionText = str(self.userSolution)
-
-
-            #move the scale
-            self.tipScales()
-
-            #draw the scale
-            self.drawScales()
-
-            #show correct animation
-            if self.correct:
-                self.showCorrect()
+            options = { 0 : self.drawMenuState,
+                        1 : self.drawPlayState,
+                        2 : self.drawPlayState
+            }
+            options[self.currentPlayState]()
 
             # Flip Display
             pygame.display.flip()
