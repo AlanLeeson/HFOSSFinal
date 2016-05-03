@@ -26,6 +26,13 @@ class BalancingAct:
     	self.leftHandNumber = 0
     	self.rightHandNumber = 0
 
+        #scoring
+        self.score = 0
+        self.pointsBase = 10
+        self.level = 1
+        self.progress = 0
+        self.perLevel = 5
+
         #numbers to calculate left side of scale
         self.weight = 1.0
         self.scaleWidth = 300
@@ -90,6 +97,7 @@ class BalancingAct:
 
     # zero equations and data
     def reset_problem(self):
+        self.updateScore()
     	self.leftHandNumber = 0
     	self.rightHandNumber = 0
     	self.userSolution = 0
@@ -201,6 +209,13 @@ class BalancingAct:
         textRect.center = ( (x+(w/2)), (y+(h/2)) )
         self.screen.blit(textSurf, textRect)
 
+    def updateScore(self):
+        self.score += self.pointsBase * self.level
+        self.progress += 1
+        if self.progress == self.perLevel:
+            self.progress = 0
+            self.level += 1
+
     #increase left number up to maximum of 10
     def increaseLeft(self):
         self.fired = pygame.time.get_ticks()
@@ -286,6 +301,8 @@ class BalancingAct:
         self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
 
         self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
+        self.textBox("Score: " + str(self.score), 5, 60, 120, 50)
+        self.textBox("Level: " + str(self.level), 5, 105, 120, 50)
 
         #update text
         self.problemText = str(self.leftHandNumber) + " x " + str(self.leftHandMultiplier) + " " + str(self.operator) + " " + str(self.rightHandNumber) + " x " +  str(self.rightHandMultiplier)
