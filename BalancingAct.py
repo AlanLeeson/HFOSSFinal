@@ -2,10 +2,13 @@
 import pygame
 import random
 import math
-from gi.repository import Gtk
+
 
 def enum(**enums):
     return type('Enum', (), enums)
+    
+def factors(n):    
+    return set(reduce(list.__add__,([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
 
 class BalancingAct:
 
@@ -25,6 +28,8 @@ class BalancingAct:
     	self.rightHandMultiplier = 0
     	self.leftHandNumber = 0
     	self.rightHandNumber = 0
+    	self.leftHandProduct = 0
+    	self.rightHandProduct = 0
 
         #scoring
         self.score = 0
@@ -36,7 +41,7 @@ class BalancingAct:
         #numbers to calculate left side of scale
         self.weight = 1.0
         self.scaleWidth = 300
-        self.scaleHeight = 30
+        self.scaleHeight = 10
         self.scaleBasePositionX = self.screenWidth/4
         self.scaleBasePositionY = self.screenHeight * 0.65
         self.scaleCurrentPosition = 0.0
@@ -63,6 +68,7 @@ class BalancingAct:
         #color palette
         self.black = (0,0,0)
         self.white = (255,255,255)
+        self.light_gray = (212,212,212)
         self.green = (100,255,100)
         self.bright_green = (0,255,0)
         self.red = (255,100,100)
@@ -85,13 +91,21 @@ class BalancingAct:
     # Create the math equation
     def create_equation(self):
     	self.solution = random.randint(10,30)
-    	self.leftHandMultiplier = int(str(self.solution)[0]) * 2
-    	secondDigit = int(str(self.solution)[1])
+    	factorSet = factors(self.solution)
+    	if random.randint(1,2) == 2 and len(factorSet) > 2:
+    	    factorSet = factors(self.solution)
+    	    self.leftHandMultiplier = list(factorSet)[1]
+    	    self.rightHandMultiplier = list(factorSet)[2]/2
+    	else:
+    	    self.leftHandMultiplier = int(str(self.solution)[0]) * 2
+    	    secondDigit = int(str(self.solution)[1])
 
-    	if secondDigit  % 2 == 0 and secondDigit > 2:
-    	    self.rightHandMultiplier = secondDigit / 2
-    	else: 
-    	    self.rightHandMultiplier = secondDigit
+    	    if secondDigit % 2 == 0 and secondDigit > 2:
+    	        self.rightHandMultiplier = secondDigit / 2
+    	    elif secondDigit == 0:
+    	        self.rightHandMultiplier = random.randint(2,9)
+    	    else: 
+    	        self.rightHandMultiplier = secondDigit
 
         self.calculate_equation()
 
@@ -100,6 +114,8 @@ class BalancingAct:
         self.updateScore()
     	self.leftHandNumber = 0
     	self.rightHandNumber = 0
+    	self.rightHandProduct = 0
+    	self.leftHandProduct = 0
     	self.userSolution = 0
         self.solutionText = 0
         self.solution = 0
@@ -110,13 +126,13 @@ class BalancingAct:
 
     # calculate the user input
     def calculate_equation(self):
-    	leftProduct = self.leftHandMultiplier * self.leftHandNumber
-    	rightProduct = self.rightHandMultiplier * self.rightHandNumber
+    	self.leftHandProduct = self.leftHandMultiplier * self.leftHandNumber
+    	self.rightHandProduct = self.rightHandMultiplier * self.rightHandNumber
     	
     	if self.operator == "+":
-    	    self.userSolution = leftProduct + rightProduct
+    	    self.userSolution = self.leftHandProduct + self.rightHandProduct
     	elif self.operator == "-":
-    	    self.userSolution = leftProduct - rightProduct
+    	    self.userSolution = self.leftHandProduct - self.rightHandProduct
 
     	self.weight = self.userSolution / (self.solution * 2.0)
         if self.weight > 1.0:
@@ -139,6 +155,18 @@ class BalancingAct:
         if self.scaleCurrentPosition == self.scaleCorrectPosition:
             self.checkCorrect(True)
 
+	#draw added cubes to scale
+    def drawCubes(self, xStart, yStart, amount):
+    	yPosition = yStart - 20
+    	xPosition = xStart
+        for x in range(0,amount):
+            if x % 5 == 0 and x != 0:
+                yPosition = yPosition - 20
+                xPosition = xStart
+            
+            xPosition = xPosition + 20
+            pygame.draw.rect(self.screen, self.red,(xPosition, yPosition, 19 , 19)) #scale
+
     #draw the scale graphic #TODO this could be greatly simplified or refactored into reusable functions
     def drawScales(self):        
         #left scale
@@ -149,10 +177,16 @@ class BalancingAct:
         leftPointTwo = (leftCalculatedX + (self.scaleWidth / 2.0), leftCalculatedY - 120) #top point of left triangle
         leftPointThree = (leftCalculatedX + self.scaleWidth, leftCalculatedY) #right point of right triangle
 
-        pygame.draw.line(self.screen, self.black, leftPointOne, leftPointTwo, 5)
-        pygame.draw.line(self.screen, self.black, leftPointTwo, leftPointThree, 5)
+        pygame.draw.line(self.screen, self.black, leftPointOne, leftPointTwo, 1)
+        pygame.draw.line(self.screen, self.black, leftPointTwo, leftPointThree, 1)
         pygame.draw.rect(self.screen, self.blue, (leftCalculatedX, leftCalculatedY, self.scaleWidth, self.scaleHeight)) #scale
-        self.textBox(self.problemText, leftCalculatedX, leftCalculatedY, self.scaleWidth, -15) #right side label
+        
+        pygame.draw.rect(self.screen, self.light_gray, (leftCalculatedX + 15, leftCalculatedY, 110, -45)) #leftContainer
+        pygame.draw.rect(self.screen, self.light_gray, (leftCalculatedX + 175, leftCalculatedY, 110, -45)) #rightContainer
+        
+        self.drawCubes(leftCalculatedX,leftCalculatedY,self.leftHandNumber) # boxes
+        self.drawCubes(leftCalculatedX + 160,leftCalculatedY,self.rightHandNumber) # boxes
+        self.textBox(self.problemText, leftCalculatedX, leftCalculatedY-10, self.scaleWidth, -15) #right side label
         
         #right scale
         rightCalculatedX = self.scaleBasePositionX + 400
@@ -162,8 +196,8 @@ class BalancingAct:
         rightPointTwo = (rightCalculatedX + (self.scaleWidth / 2.0), rightCalculatedY - 120) #top point of right triangle
         rightPointThree = (rightCalculatedX + self.scaleWidth, rightCalculatedY) #right point of right triangle
 
-        pygame.draw.line(self.screen, self.black, rightPointOne, rightPointTwo, 5) #
-        pygame.draw.line(self.screen, self.black, rightPointTwo, rightPointThree, 5)
+        pygame.draw.line(self.screen, self.black, rightPointOne, rightPointTwo, 1) #
+        pygame.draw.line(self.screen, self.black, rightPointTwo, rightPointThree, 1)
         pygame.draw.rect(self.screen, self.blue, (rightCalculatedX, rightCalculatedY, self.scaleWidth, self.scaleHeight))
         self.textBox(self.solutionText, rightCalculatedX, rightCalculatedY, self.scaleWidth, -15) #right side label
 
@@ -301,11 +335,11 @@ class BalancingAct:
         self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
 
         self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
-        self.textBox("Score: " + str(self.score), 5, 60, 120, 50)
-        self.textBox("Level: " + str(self.level), 5, 105, 120, 50)
+        self.textBox("Score: " + str(self.score), 10, 60, 120, 50)
+        self.textBox("Level: " + str(self.level), 10, 105, 120, 50)
 
         #update text
-        self.problemText = str(self.leftHandNumber) + " x " + str(self.leftHandMultiplier) + " " + str(self.operator) + " " + str(self.rightHandNumber) + " x " +  str(self.rightHandMultiplier)
+        self.problemText = str("x" + str(self.leftHandMultiplier) + "    " + str(self.operator) + "    x" +  str(self.rightHandMultiplier))
         self.solutionText = str(self.solution)
         self.userSolutionText = str(self.userSolution)
 
@@ -326,8 +360,7 @@ class BalancingAct:
 
         while self.running:
             # Pump GTK messages.
-            while Gtk.events_pending():
-                Gtk.main_iteration()
+            
 
             # Pump PyGame messages.
             for event in pygame.event.get():
