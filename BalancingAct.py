@@ -10,11 +10,13 @@ def enum(**enums):
 class BalancingAct:
 
     def __init__(self):
+        self.running = True
+
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
 
         self.screenWidth = pygame.display.Info().current_w
-	self.screenHeight = pygame.display.Info().current_h
+        self.screenHeight = pygame.display.Info().current_h
 	
         self.solution = 0
     	self.userSolution = 0
@@ -40,10 +42,16 @@ class BalancingAct:
         self.fired = 0
         self.cooldown = 300
 
-        self.playStates = enum(Menu=0,Play=1,Paused=2)
+        self.playStates = enum(Menu=0,Play=1,Instructions=2)
         self.currentPlayState = self.playStates.Menu
         self.paused = False
         self.direction = 1
+
+        #button scheme
+        self.buttonW = 300;
+        self.buttonH = 60;
+        self.buttonX = (self.screenWidth/2) - (self.buttonW/2)
+        self.buttonY = [200,400,500,600]
 
         #color palette
         self.black = (0,0,0)
@@ -227,19 +235,45 @@ class BalancingAct:
         self.button('Next Problem',self.bright_green,self.green,800,200,400,195,self.reset_problem)
 
     # Start the game 
-    def setupPlay(self):
+    def startPlay(self):
+        self.fired = pygame.time.get_ticks()
         self.currentPlayState = self.playStates.Play
-        if self.solution == 0:
-            self.create_equation()
+        self.create_equation()
+
+    # Resume the game 
+    def continuePlay(self):
+        self.fired = pygame.time.get_ticks()
+        self.currentPlayState = self.playStates.Play
 
     # Return to the menu
     def returnToMenu(self):
+        self.fired = pygame.time.get_ticks()
         self.currentPlayState = self.playStates.Menu
+
+    # Show Instructions
+    def showInstructions(self):
+        self.fired = pygame.time.get_ticks()
+        self.currentPlayState = self.playStates.Instructions
+
+    # End the game
+    def exitGame(self):
+        self.fired = pygame.time.get_ticks()
+        self.running = False
 
     # The screen for the menu
     def drawMenuState(self):
-        self.textBox("Balancing Act", self.screenWidth/2 - 30, 200, 60, -15)
-        self.button('Start',self.bright_blue,self.blue,self.screenWidth/2-60,400,120,60,self.setupPlay)
+        self.textBox("Balancing Act", self.buttonX, self.buttonY[0], self.buttonW, self.buttonH)
+        if self.solution == 0:
+            self.button('Start',self.bright_blue,self.blue,self.buttonX,self.buttonY[1],self.buttonW,self.buttonH,self.startPlay)
+        else:
+            self.button('Continue',self.bright_blue,self.blue,self.buttonX,self.buttonY[1],self.buttonW,self.buttonH,self.continuePlay)
+
+        self.button('Instructions',self.bright_blue,self.blue,self.buttonX,self.buttonY[2],self.buttonW,self.buttonH,self.showInstructions)
+        self.button('Exit',self.bright_blue,self.blue,self.buttonX,self.buttonY[3],self.buttonW,self.buttonH,self.exitGame)
+
+    # The screen for the instrucitons
+    def drawInstructionState(self):
+        self.button('Back',self.bright_blue,self.blue,self.buttonX,self.buttonY[2],self.buttonW,self.buttonH,self.returnToMenu)
 
     # The screen during play
     def drawPlayState(self):
@@ -271,8 +305,6 @@ class BalancingAct:
 
     # The main game loop.
     def run(self):
-        self.running = True
-
         self.screen = pygame.display.get_surface()
 
         while self.running:
@@ -296,7 +328,7 @@ class BalancingAct:
 
             options = { 0 : self.drawMenuState,
                         1 : self.drawPlayState,
-                        2 : self.drawPlayState
+                        2 : self.drawInstructionState
             }
             options[self.currentPlayState]()
 
