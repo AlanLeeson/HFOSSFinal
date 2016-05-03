@@ -41,7 +41,7 @@ class BalancingAct:
         self.cooldown = 300
 
         self.playStates = enum(Menu=0,Play=1,Paused=2)
-        self.currentPlayState = self.playStates.Play
+        self.currentPlayState = self.playStates.Menu
         self.paused = False
         self.direction = 1
 
@@ -229,7 +229,8 @@ class BalancingAct:
     # Start the game 
     def setupPlay(self):
         self.currentPlayState = self.playStates.Play
-        self.create_equation()
+        if self.solution == 0:
+            self.create_equation()
 
     # Return to the menu
     def returnToMenu(self):
@@ -315,7 +316,6 @@ def main():
     pygame.init()
     pygame.display.set_mode((0, 0), pygame.RESIZABLE)
     game = BalancingAct()
-    game.create_equation()
     game.run()
 
 if __name__ == '__main__':
