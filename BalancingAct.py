@@ -40,9 +40,9 @@ class BalancingAct:
 
         #numbers to calculate left side of scale
         self.weight = 1.0
-        self.scaleWidth = 300
+        self.scaleWidth = 400
         self.scaleHeight = 10
-        self.scaleBasePositionX = self.screenWidth/4
+        self.scaleBasePositionX = self.screenWidth/8
         self.scaleBasePositionY = self.screenHeight * 0.65
         self.scaleCurrentPosition = 0.0
         self.scaleCorrectPosition = 0.0
@@ -90,7 +90,7 @@ class BalancingAct:
     
     # Create the math equation
     def create_equation(self):
-    	self.solution = random.randint(10,30)
+    	self.solution = random.randint(self.level * 10,self.level * 30)
     	factorSet = factors(self.solution)
     	if random.randint(1,2) == 2 and len(factorSet) > 2:
     	    factorSet = factors(self.solution)
@@ -106,7 +106,9 @@ class BalancingAct:
     	        self.rightHandMultiplier = random.randint(2,9)
     	    else: 
     	        self.rightHandMultiplier = secondDigit
-
+        if self.rightHandMultiplier == self.leftHandMultiplier:
+            self.rightHandMultiplier = self.rightHandMultiplier + 1
+            self.leftHandMultiplier = self.leftHandMultiplier - 1
         self.calculate_equation()
 
     # zero equations and data
@@ -157,15 +159,15 @@ class BalancingAct:
 
 	#draw added cubes to scale
     def drawCubes(self, xStart, yStart, amount):
-    	yPosition = yStart - 20
+    	yPosition = yStart - 30
     	xPosition = xStart
         for x in range(0,amount):
             if x % 5 == 0 and x != 0:
-                yPosition = yPosition - 20
+                yPosition = yPosition - 30
                 xPosition = xStart
             
-            xPosition = xPosition + 20
-            pygame.draw.rect(self.screen, self.red,(xPosition, yPosition, 19 , 19)) #scale
+            xPosition = xPosition + 30
+            pygame.draw.rect(self.screen, self.red,(xPosition, yPosition, 29 , 29)) #scale
 
     #draw the scale graphic #TODO this could be greatly simplified or refactored into reusable functions
     def drawScales(self):        
@@ -181,15 +183,17 @@ class BalancingAct:
         pygame.draw.line(self.screen, self.black, leftPointTwo, leftPointThree, 1)
         pygame.draw.rect(self.screen, self.blue, (leftCalculatedX, leftCalculatedY, self.scaleWidth, self.scaleHeight)) #scale
         
-        pygame.draw.rect(self.screen, self.light_gray, (leftCalculatedX + 15, leftCalculatedY, 110, -45)) #leftContainer
-        pygame.draw.rect(self.screen, self.light_gray, (leftCalculatedX + 175, leftCalculatedY, 110, -45)) #rightContainer
+        leftBoxX = leftCalculatedX + 15
+        rightBoxX = leftCalculatedX + self.scaleWidth - 175
+        pygame.draw.rect(self.screen, self.light_gray, (leftBoxX, leftCalculatedY, 160, -65)) #leftContainer
+        pygame.draw.rect(self.screen, self.light_gray, (rightBoxX, leftCalculatedY, 160, -65)) #rightContainer
         
-        self.drawCubes(leftCalculatedX,leftCalculatedY,self.leftHandNumber) # boxes
-        self.drawCubes(leftCalculatedX + 160,leftCalculatedY,self.rightHandNumber) # boxes
+        self.drawCubes(leftBoxX - 25,leftCalculatedY,self.leftHandNumber) # boxes
+        self.drawCubes(rightBoxX  - 25,leftCalculatedY,self.rightHandNumber) # boxes
         self.textBox(self.problemText, leftCalculatedX, leftCalculatedY-10, self.scaleWidth, -15) #right side label
         
         #right scale
-        rightCalculatedX = self.scaleBasePositionX + 400
+        rightCalculatedX = self.scaleBasePositionX + 500
         rightCalculatedY = self.scaleBasePositionY - 100.0 + self.scaleCurrentPosition #basePosition plus this opposite adjustment of the left side
         
         rightPointOne = (rightCalculatedX, rightCalculatedY) #left point of right triangle
@@ -326,20 +330,12 @@ class BalancingAct:
 
     # The screen during play
     def drawPlayState(self):
-        # Draw increase buttons
-        self.button('+',self.bright_green,self.green,50,400,100,50,self.increaseLeft)
-        self.button('+',self.bright_green,self.green,200,400,100,50,self.increaseRight)
-
-        # Draw decrease buttons
-        self.button('-',self.bright_red,self.red,50,500,100,50,self.decreaseLeft)
-        self.button('-',self.bright_red,self.red,200,500,100,50,self.decreaseRight)
-
         self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
         self.textBox("Score: " + str(self.score), 10, 60, 120, 50)
         self.textBox("Level: " + str(self.level), 10, 105, 120, 50)
 
         #update text
-        self.problemText = str("x" + str(self.leftHandMultiplier) + "    " + str(self.operator) + "    x" +  str(self.rightHandMultiplier))
+        self.problemText = str("x" + str(self.leftHandMultiplier) + "      " + str(self.operator) + "      x" +  str(self.rightHandMultiplier))
         self.solutionText = str(self.solution)
         self.userSolutionText = str(self.userSolution)
 
@@ -348,6 +344,14 @@ class BalancingAct:
 
         #draw the scale
         self.drawScales()
+        
+        # Draw increase buttons
+        self.button('+',self.bright_green,self.green,210,280,100,50,self.increaseLeft)
+        self.button('+',self.bright_green,self.green,420,280,100,50,self.increaseRight)
+
+        # Draw decrease buttons
+        self.button('-',self.bright_red,self.red,210,550,100,50,self.decreaseLeft)
+        self.button('-',self.bright_red,self.red,420,550,100,50,self.decreaseRight)
 
         #show correct animation
         if self.correct:
