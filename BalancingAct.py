@@ -21,6 +21,7 @@ class BalancingAct:
         self.screenWidth = pygame.display.Info().current_w
         self.screenHeight = pygame.display.Info().current_h
 	
+	    #variables to calculate equation
         self.solution = 0
     	self.userSolution = 0
     	self.operator = "+"
@@ -30,6 +31,9 @@ class BalancingAct:
     	self.rightHandNumber = 0
     	self.leftHandProduct = 0
     	self.rightHandProduct = 0
+    	
+    	self.img = pygame.image.load("images/example.png")
+    	pygame.transform.scale(self.img,(self.screenWidth,self.screenHeight))
 
         #scoring
         self.score = 0
@@ -56,8 +60,6 @@ class BalancingAct:
 
         self.playStates = enum(Menu=0,Play=1,Instructions=2)
         self.currentPlayState = self.playStates.Menu
-        self.paused = False
-        self.direction = 1
 
         #button scheme
         self.buttonW = 300;
@@ -125,6 +127,18 @@ class BalancingAct:
         self.correct = False
         self.create_equation()
 
+	# create a new problem
+    def new_problem(self):
+        self.leftHandNumber = 0
+    	self.rightHandNumber = 0
+    	self.rightHandProduct = 0
+    	self.leftHandProduct = 0
+    	self.userSolution = 0
+        self.solutionText = 0
+        self.solution = 0
+        self.buttonsEnabled = True
+        self.correct = False
+        self.create_equation()
 
     # calculate the user input
     def calculate_equation(self):
@@ -326,11 +340,13 @@ class BalancingAct:
 
     # The screen for the instrucitons
     def drawInstructionState(self):
+        self.screen.blit(self.img,(0,0))
         self.button('Back',self.bright_blue,self.blue,self.buttonX,self.buttonY[2],self.buttonW,self.buttonH,self.returnToMenu)
 
     # The screen during play
     def drawPlayState(self):
-        self.button('menu',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
+        self.button('MENU',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
+        self.button('NEW PROBLEM',self.bright_green,self.green,200,5,320,50,self.new_problem)
         self.textBox("Score: " + str(self.score), 10, 60, 120, 50)
         self.textBox("Level: " + str(self.level), 10, 105, 120, 50)
 
