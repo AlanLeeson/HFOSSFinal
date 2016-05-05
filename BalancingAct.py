@@ -341,6 +341,7 @@ class BalancingAct:
     # The screen for the instrucitons
     def drawInstructionState(self):
         self.screen.blit(self.img,(0,0))
+        self.textBox(str(self.screenWidth) + " " + str(self.screenHeight),100,600,120,50)
         self.button('Back',self.bright_blue,self.blue,self.buttonX,self.buttonY[2],self.buttonW,self.buttonH,self.returnToMenu)
 
     # The screen during play
@@ -416,7 +417,7 @@ class BalancingAct:
 # ./TestGame.py
 def main():
     pygame.init()
-    pygame.display.set_mode((0, 0), pygame.RESIZABLE)
+    pygame.display.set_mode((1200, 900), pygame.RESIZABLE)
     game = BalancingAct()
     game.run()
 
