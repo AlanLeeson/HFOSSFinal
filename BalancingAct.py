@@ -33,6 +33,7 @@ class BalancingAct:
     	self.rightHandProduct = 0
     	
     	self.img = pygame.image.load("images/example.png")
+    	self.instructionImg = pygame.image.load("images/exampleInstruction.png")
     	self.backgroundImg = pygame.image.load("images/exampleBackground.png")
     	pygame.transform.scale(self.img,(self.screenWidth,self.screenHeight))
 
@@ -66,7 +67,7 @@ class BalancingAct:
         self.buttonW = 300;
         self.buttonH = 60;
         self.buttonX = (self.screenWidth/2) - (self.buttonW/2)
-        self.buttonY = [200,400,500,600]
+        self.buttonY = [200,500,600,700]
 
         #color palette
         self.black = (0,0,0)
@@ -300,7 +301,7 @@ class BalancingAct:
     #end the current problem and enable next problem button
     def showCorrect(self):
         self.buttonsEnabled = False;
-        self.button('Next Problem',self.bright_green,self.green,self.screenWidth-400,self.screenHeight-120,400,120,self.reset_problem)
+        self.button('Next Problem',self.bright_green,self.green,self.screenWidth-405,self.screenHeight-200,400,120,self.reset_problem)
 
     # Start the game 
     def startPlay(self):
@@ -341,16 +342,15 @@ class BalancingAct:
 
     # The screen for the instrucitons
     def drawInstructionState(self):
-        self.screen.blit(self.img,(0,0))
-        self.textBox(str(self.screenWidth) + " " + str(self.screenHeight),100,600,120,50)
-        self.button('Back',self.bright_blue,self.blue,self.buttonX,self.buttonY[2],self.buttonW,self.buttonH,self.returnToMenu)
+        self.screen.blit(self.instructionImg,(0,0))
+        self.button('Back',self.bright_blue,self.blue,5,5,self.buttonW,self.buttonH,self.returnToMenu)
 
     # The screen during play
     def drawPlayState(self):
         self.button('MENU',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
         self.button('NEW PROBLEM',self.bright_green,self.green,200,5,320,50,self.new_problem)
-        self.textBox("Score: " + str(self.score), 10, 60, 120, 50)
-        self.textBox("Level: " + str(self.level), 10, 105, 120, 50)
+        self.textBox("Score: " + str(self.score), 30, 60, 120, 50)
+        self.textBox("Level: " + str(self.level), 30, 105, 120, 50)
 
         #update text
         self.problemText = str("x" + str(self.leftHandMultiplier) + "      " + str(self.operator) + "      x" +  str(self.rightHandMultiplier))
