@@ -33,6 +33,7 @@ class BalancingAct:
     	self.rightHandProduct = 0
     	
     	self.img = pygame.image.load("images/example.png")
+    	self.backgroundImg = pygame.image.load("images/exampleBackground.png")
     	pygame.transform.scale(self.img,(self.screenWidth,self.screenHeight))
 
         #scoring
@@ -299,7 +300,7 @@ class BalancingAct:
     #end the current problem and enable next problem button
     def showCorrect(self):
         self.buttonsEnabled = False;
-        self.button('Next Problem',self.bright_green,self.green,800,200,400,195,self.reset_problem)
+        self.button('Next Problem',self.bright_green,self.green,self.screenWidth-400,self.screenHeight-120,400,120,self.reset_problem)
 
     # Start the game 
     def startPlay(self):
@@ -329,7 +330,7 @@ class BalancingAct:
 
     # The screen for the menu
     def drawMenuState(self):
-        self.textBox("Balancing Act", self.buttonX, self.buttonY[0], self.buttonW, self.buttonH)
+        self.screen.blit(self.backgroundImg,(0,0))
         if self.solution == 0:
             self.button('Start',self.bright_blue,self.blue,self.buttonX,self.buttonY[1],self.buttonW,self.buttonH,self.startPlay)
         else:
@@ -363,12 +364,12 @@ class BalancingAct:
         self.drawScales()
         
         # Draw increase buttons
-        self.button('+',self.bright_green,self.green,210,280,100,50,self.increaseLeft)
-        self.button('+',self.bright_green,self.green,420,280,100,50,self.increaseRight)
+        self.button('+',self.bright_green,self.green,200,330,100,50,self.increaseLeft)
+        self.button('+',self.bright_green,self.green,410,330,100,50,self.increaseRight)
 
         # Draw decrease buttons
-        self.button('-',self.bright_red,self.red,210,550,100,50,self.decreaseLeft)
-        self.button('-',self.bright_red,self.red,420,550,100,50,self.decreaseRight)
+        self.button('-',self.bright_red,self.red,200,610,100,50,self.decreaseLeft)
+        self.button('-',self.bright_red,self.red,410,610,100,50,self.decreaseRight)
 
         #show correct animation
         if self.correct:
