@@ -31,6 +31,8 @@ class BalancingAct:
     	self.rightHandNumber = 0
     	self.leftHandProduct = 0
     	self.rightHandProduct = 0
+    	self.leftProductTextSpeed = 61.0
+    	self.rightProductTextSpeed = 61.0
     	
     	self.img = pygame.image.load("images/example.png")
     	self.instructionImg = pygame.image.load("images/exampleInstruction.png")
@@ -201,6 +203,15 @@ class BalancingAct:
         
         leftBoxX = leftCalculatedX + 15
         rightBoxX = leftCalculatedX + self.scaleWidth - 175
+        
+        #product text logic
+        if self.leftProductTextSpeed < 60:
+            self.leftProductTextSpeed = self.leftProductTextSpeed + 4.5
+            self.textBox(str(self.leftHandProduct), leftBoxX - self.leftProductTextSpeed, leftCalculatedY-10, 40, -15) #left product label
+        if self.rightProductTextSpeed < 60:
+            self.rightProductTextSpeed = self.rightProductTextSpeed + 4.5   
+            self.textBox(str(self.rightHandProduct), rightBoxX + 120 + self.rightProductTextSpeed, leftCalculatedY-10, 40, -15) #right product label
+        
         pygame.draw.rect(self.screen, self.light_gray, (leftBoxX, leftCalculatedY, 160, -65)) #leftContainer
         pygame.draw.rect(self.screen, self.light_gray, (rightBoxX, leftCalculatedY, 160, -65)) #rightContainer
         
@@ -276,6 +287,7 @@ class BalancingAct:
         if self.leftHandNumber < 10 and self.buttonsEnabled:
             self.leftHandNumber += 1
         self.calculate_equation()
+        self.leftProductTextSpeed = 1
 
     #increase right number up to maximum of 10
     def increaseRight(self):
@@ -283,6 +295,7 @@ class BalancingAct:
         if self.rightHandNumber < 10 and self.buttonsEnabled:
             self.rightHandNumber += 1
         self.calculate_equation()
+        self.rightProductTextSpeed = 1
 
     #decrease left number down to minimum of 0
     def decreaseLeft(self):
@@ -290,6 +303,7 @@ class BalancingAct:
         if self.leftHandNumber > 0 and self.buttonsEnabled:
             self.leftHandNumber -= 1
         self.calculate_equation()
+        self.leftProductTextSpeed = 1
 
     #decrese right number down to minimum of 0
     def decreaseRight(self):
@@ -297,6 +311,7 @@ class BalancingAct:
         if self.rightHandNumber > 0 and self.buttonsEnabled:
             self.rightHandNumber -= 1
         self.calculate_equation()
+        self.rightProductTextSpeed = 1
 
     #end the current problem and enable next problem button
     def showCorrect(self):
