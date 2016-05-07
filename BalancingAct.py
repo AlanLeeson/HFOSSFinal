@@ -34,10 +34,9 @@ class BalancingAct:
     	self.leftProductTextSpeed = 61.0
     	self.rightProductTextSpeed = 61.0
     	
-    	self.img = pygame.image.load("images/example.png")
     	self.instructionImg = pygame.image.load("images/exampleInstruction.png")
     	self.backgroundImg = pygame.image.load("images/exampleBackground.png")
-    	pygame.transform.scale(self.img,(self.screenWidth,self.screenHeight))
+    	self.playBackgroundImg = pygame.image.load("images/examplePlayBackground.jpg")
 
         #scoring
         self.score = 0
@@ -362,6 +361,7 @@ class BalancingAct:
 
     # The screen during play
     def drawPlayState(self):
+    	self.screen.blit(self.playBackgroundImg,(0,0))
         self.button('MENU',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
         self.button('NEW PROBLEM',self.bright_green,self.green,200,5,320,50,self.new_problem)
         self.textBox("Score: " + str(self.score), 30, 60, 120, 50)
