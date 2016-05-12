@@ -34,9 +34,9 @@ class BalancingAct:
     	self.leftProductTextSpeed = 61.0
     	self.rightProductTextSpeed = 61.0
     	
-    	self.instructionImg = pygame.image.load("images/exampleInstruction.png")
-    	self.backgroundImg = pygame.image.load("images/exampleBackground.png")
-    	self.playBackgroundImg = pygame.image.load("images/examplePlayBackground.jpg")
+    	self.instructionImg = pygame.image.load("images/exampleInstruction.png").convert_alpha()
+    	self.backgroundImg = pygame.image.load("images/exampleBackground.png").convert_alpha()
+    	self.playBackgroundImg = pygame.image.load("images/examplePlayBackground.jpg").convert_alpha()
 
         #scoring
         self.score = 0
