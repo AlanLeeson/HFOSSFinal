@@ -362,10 +362,10 @@ class BalancingAct:
     # The screen during play
     def drawPlayState(self):
     	self.screen.blit(self.playBackgroundImg,(0,0))
-        self.button('MENU',self.bright_blue,self.blue,5,5,120,50,self.returnToMenu)
-        self.button('NEW PROBLEM',self.bright_green,self.green,200,5,320,50,self.new_problem)
-        self.textBox("Score: " + str(self.score), 30, 60, 120, 50)
-        self.textBox("Level: " + str(self.level), 30, 105, 120, 50)
+        self.button('MENU',self.bright_blue,self.blue,5,10,120,50,self.returnToMenu)
+        self.button('NEW PROBLEM',self.bright_green,self.green,160,10,320,50,self.new_problem)
+        self.textBox("Score: " + str(self.score), 30, 75, 120, 50)
+        self.textBox("Level: " + str(self.level), 30, 120, 120, 50)
 
         #update text
         self.problemText = str("x" + str(self.leftHandMultiplier) + "      " + str(self.operator) + "      x" +  str(self.rightHandMultiplier))
