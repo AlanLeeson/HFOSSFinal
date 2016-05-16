@@ -6,9 +6,9 @@ Balance a beam by adding, subtracting, multiplying and dividing numbers on the l
 
 Run using python 2
 
-'''
+```
 python2 BalancyingAct.py
-'''
+```
 
 #Usage
 
