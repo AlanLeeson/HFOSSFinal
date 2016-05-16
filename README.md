@@ -12,4 +12,4 @@ python2 BalancyingAct.py
 
 #Usage
 
-Instructions for playing the game are included within the game. It is licensed under the MIT license.
+Instructions for playing the game are included within the game. It is licensed under the [MIT license](https://opensource.org/licenses/MIT).
